@@ -1,5 +1,8 @@
 defmodule NotifierWeb.Response do
-  def response({:error, err}), do: %{ code: 400, details: err }
-  def response({:ok, data}), do: %{ code: 200, details: data }
-  def response({:created, data}), do: %{ code: 201, details: data }
+  import NotifierWeb.Codes
+
+  def response({:error, err}), do: %{ code: bad_request(), details: err }
+  def response({:ok, data}), do: %{ code: ok(), details: data }
+  def response({:created, data}), do: %{ code: bad_request(), details: data }
+  def response({_, data}), do: %{ code: internal_server_error(), details: data }
 end
