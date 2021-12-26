@@ -1,7 +1,7 @@
 defmodule NotifierWeb.CouchDb.Operations do
 
   import NotifierWeb.HTTPClient, only: [ post: 2 ]
-  @couchdb_url "http://admin:password@172.17.0.3:5984/"
+  @couchdb_url "http://admin:password@172.17.0.2:5984/"
   @db_name "notifications/"
   def get_notifications_operation(user_id, limit, page) do
 
@@ -21,7 +21,7 @@ defmodule NotifierWeb.CouchDb.Operations do
     body = Jason.decode! res.body
 
     case body["error"] do
-      nil -> {:ok, body}
+      nil -> {:ok, body["docs"]}
       _ -> {:error, body["error"]}
     end
   end
