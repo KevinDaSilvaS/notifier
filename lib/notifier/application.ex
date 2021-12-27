@@ -13,7 +13,8 @@ defmodule Notifier.Application do
       # Start the PubSub system
       {Phoenix.PubSub, name: Notifier.PubSub},
       # Start the Endpoint (http/https)
-      NotifierWeb.Endpoint
+      NotifierWeb.Endpoint,
+      Consumer
       # Start a worker by calling: Notifier.Worker.start_link(arg)
       # {Notifier.Worker, arg}
     ]
