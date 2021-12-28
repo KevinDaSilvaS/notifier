@@ -11,7 +11,7 @@ defmodule Consumer do
   @queue_error "#{@queue}_error"
 
   def init(_opts) do
-    {:ok, conn} = Connection.open("amqp://guest:guest@172.17.0.2")
+    {:ok, conn} = Connection.open("amqp://guest:guest@172.17.0.3")
     {:ok, chan} = Channel.open(conn)
     setup_queue(chan)
 
@@ -53,7 +53,7 @@ defmodule Consumer do
                                {"x-dead-letter-routing-key", :longstr, @queue_error}
                              ]
                             )
-    :ok = Exchange.fanout(chan, @exchange, durable: true)
+    :ok = Exchange.topic(chan, @exchange, durable: true)
     :ok = Queue.bind(chan, @queue, @exchange)
   end
 
