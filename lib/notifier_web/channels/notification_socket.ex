@@ -1,4 +1,4 @@
-defmodule NotifierWeb.UserSocket do
+defmodule NotifierWeb.NotificationSocket do
   use Phoenix.Socket
 
   # A Socket handler
@@ -33,14 +33,8 @@ defmodule NotifierWeb.UserSocket do
   # performing token verification on connect.
   @impl true
   def connect(_params, socket, _connect_info) do
+    IO.inspect("olá")
     {:ok, socket}
-  end
-
-  def join("room:lobby", _, socket) do
-    {:ok, socket}
-  end
-  def join(_, _, _) do
-    {:error, %{reason: "unauthorized"}}
   end
 
   # Socket id's are topics that allow you to identify all sockets for a given user:
