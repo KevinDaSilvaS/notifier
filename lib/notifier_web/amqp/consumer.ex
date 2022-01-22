@@ -1,6 +1,6 @@
 defmodule Consumer do
   use GenServer
-  use AMQP
+  use AMQP, restart: :permanent
 
   def start_link(_) do
     GenServer.start_link(__MODULE__, [])
@@ -33,13 +33,17 @@ defmodule Consumer do
   end
 
   # Confirmation sent by the broker to the consumer process after a Basic.cancel
-  def handle_info({:basic_cancel_ok, %{consumer_tag: consumer_tag}}, chan) do
+  def handle_info({:basic_cancel_ok, %{consumer_tag: _consumer_tag}}, chan) do
     {:noreply, chan}
   end
 
   def handle_info({:basic_deliver, payload, %{delivery_tag: tag, redelivered: redelivered}}, chan) do
     # You might want to run payload consumption in separate Tasks in production
     consume(chan, tag, redelivered, payload)
+    {:noreply, chan}
+  end
+
+  def handle_info(_, chan) do
     {:noreply, chan}
   end
 
@@ -57,9 +61,18 @@ defmodule Consumer do
     :ok = Queue.bind(chan, @queue, @exchange)
   end
 
-  defp consume(channel, tag, redelivered, payload) do
-    IO.inspect(payload)
-    :ok = Basic.ack channel, tag
-    #:ok = Basic.reject channel, tag, requeue: false
+  defp consume(channel, tag, _redelivered, payload) do
+    socket = Agent.SocketState.get_socket_state()
+    case socket do
+      {:ok, socket} ->
+        IO.inspect payload
+        {:ok, parsed_payload} = Jason.decode payload
+        topic = "room:" <> parsed_payload["user_id"]
+
+        {:ok, joined} = SocketClient.join_topic socket, topic
+        SocketClient.push joined, topic, parsed_payload
+        :ok = Basic.ack channel, tag
+      _ -> IO.inspect "ERROR"
+    end
   end
 end
