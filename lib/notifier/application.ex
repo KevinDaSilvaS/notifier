@@ -14,7 +14,9 @@ defmodule Notifier.Application do
       {Phoenix.PubSub, name: Notifier.PubSub},
       # Start the Endpoint (http/https)
       NotifierWeb.Endpoint,
-      Consumer
+      NotifierWeb.Room,
+      {Agent.SocketState, {:error}},
+      Consumer,
       # Start a worker by calling: Notifier.Worker.start_link(arg)
       # {Notifier.Worker, arg}
     ]
