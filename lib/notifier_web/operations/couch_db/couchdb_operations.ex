@@ -1,11 +1,16 @@
 defmodule NotifierWeb.CouchDb.Operations do
 
   import NotifierWeb.HTTPClient, only: [ post: 2 ]
-  @couchdb_url "http://admin:password@172.17.0.4:5984/"
-  @db_name "notifications/"
+  @port     System.fetch_env! "COUCHDB_PORT"
+  @username System.fetch_env! "COUCHDB_USER"
+  @db_name  System.fetch_env! "COUCHDB_NAME"
+  @password System.fetch_env! "COUCHDB_PASSWORD"
+  @host     System.fetch_env! "COUCHDB_HOST"
+  @couchdb_url "http://#{@username}:#{@password}@#{@host}:#{@port}/#{@db_name}/"
+
   def get_notifications_operation(user_id, limit, page) do
 
-    url = @couchdb_url <> @db_name <> "_find"
+    url = @couchdb_url <> "_find"
     body = %{
       "selector" => %{
         "user_id" => user_id
@@ -36,8 +41,7 @@ defmodule NotifierWeb.CouchDb.Operations do
     date = Date.utc_today() |> Date.to_string()
     notification_payload = Map.put(notification, :date, date)
 
-    url = @couchdb_url <> @db_name
-    {:ok, res} = post url, notification_payload
+    {:ok, res} = post @couchdb_url, notification_payload
     {:created, Jason.decode!(res.body)}
   end
 end
