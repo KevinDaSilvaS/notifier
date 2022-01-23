@@ -66,14 +66,15 @@ defmodule Consumer do
     socket = Agent.SocketState.get_socket_state()
     case socket do
       {:ok, socket} ->
-        Logger.info("Message received: #{inspect(payload)}")
+        Logger.info "Message received: #{inspect(payload)}"
         {:ok, parsed_payload} = Jason.decode payload
         topic = "room:" <> parsed_payload["user_id"]
 
         {:ok, joined} = SocketClient.join_topic socket, topic
         SocketClient.push joined, topic, parsed_payload
         :ok = Basic.ack channel, tag
-      _ -> Logger.error("Notifier is not up yet")
+      _ ->
+        Logger.error "Notifier is not up yet"
     end
   end
 end

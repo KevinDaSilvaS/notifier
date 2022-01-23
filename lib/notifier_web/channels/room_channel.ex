@@ -1,10 +1,9 @@
 defmodule NotifierWeb.RoomChannel do
   use NotifierWeb, :channel
-  alias NotifierWeb.Room
 
   @impl true
 
-  def join("room:" <> user_id, payload, socket) do
+  def join("room:" <> _user_id, _payload, socket) do
     {:ok, socket}
   end
 
