@@ -7,12 +7,15 @@ defmodule Consumer do
     GenServer.start_link(__MODULE__, [])
   end
 
-  @exchange    "notifier"
-  @queue       "notifications"
+  @username System.fetch_env! "RABBITMQ_USER"
+  @password System.fetch_env! "RABBITMQ_PASSWORD"
+  @host     System.fetch_env! "RABBITMQ_HOST"
+  @exchange System.fetch_env! "RABBITMQ_EXCHANGE"
+  @queue    System.fetch_env! "RABBITMQ_QUEUE"
   @queue_error "#{@queue}_error"
 
   def init(_opts) do
-    {:ok, conn} = Connection.open("amqp://guest:guest@172.17.0.3")
+    {:ok, conn} = Connection.open("amqp://#{@username}:#{@password}@#{@host}")
     {:ok, chan} = Channel.open(conn)
     setup_queue(chan)
 
