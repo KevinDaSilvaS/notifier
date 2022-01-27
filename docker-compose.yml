@@ -1,0 +1,35 @@
+version: '3.7'
+
+services:
+  rabbit-mq:
+    image: rabbitmq:3-management
+    hostname: my-rabbit
+    ports: 
+      - "15672:15672"
+      - "5672:5672"
+    networks:
+      - notifier
+  app:
+    image: app 
+    build: 
+      context: .
+    environment:
+      - COUCHDB_PORT=5984 
+      - COUCHDB_USER=admin
+      - COUCHDB_PASSWORD=password
+      - COUCHDB_HOST=172.17.0.4
+      - COUCHDB_NAME=notifications
+      - RABBITMQ_HOST=rabbit-mq
+      - RABBITMQ_USER=guest
+      - RABBITMQ_PASSWORD=guest
+      - RABBITMQ_EXCHANGE=notifier
+      - RABBITMQ_QUEUE=notifications
+      - SECRET_KEY_BASE=h4njYkCmZgvQ0X9fcCtD2FmWIbRhVbErloGFJ0Wqdcqn4ZU2JjELo8CfGc5DoWKC
+    ports: 
+      - "4000:4000"
+    networks:
+      - notifier
+networks:
+    notifier:
+        driver: bridge
+        name: notifier
