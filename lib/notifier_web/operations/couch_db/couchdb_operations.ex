@@ -1,12 +1,30 @@
 defmodule NotifierWeb.CouchDb.Operations do
 
-  import NotifierWeb.HTTPClient, only: [ post: 2 ]
+  use GenServer
+
+  import NotifierWeb.HTTPClient, only: [ post: 2, put: 1 ]
   @port     System.fetch_env! "COUCHDB_PORT"
   @username System.fetch_env! "COUCHDB_USER"
   @db_name  System.fetch_env! "COUCHDB_NAME"
   @password System.fetch_env! "COUCHDB_PASSWORD"
   @host     System.fetch_env! "COUCHDB_HOST"
   @couchdb_url "http://#{@username}:#{@password}@#{@host}:#{@port}/#{@db_name}/"
+
+  def start_link(_) do
+    GenServer.start_link(__MODULE__, [])
+  end
+
+  def init(_opts) do
+    {:ok, _res} = put @couchdb_url
+    create_index_url = @couchdb_url <> "_index"
+    post create_index_url, %{
+      "index" => %{
+          "fields" => ["date"]
+      },
+      "name" => "date-index",
+      "type" => "json"
+    }
+  end
 
   def get_notifications_operation(user_id, limit, page) do
 

@@ -1,0 +1,9 @@
+deps
+.env
+/cover/
+/doc/
+/_build/
+/.fetch
+erl_crash.dump
+*.ez
+notifier-*.tar
