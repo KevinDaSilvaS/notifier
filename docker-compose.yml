@@ -5,28 +5,42 @@ services:
     image: rabbitmq:3-management
     hostname: my-rabbit
     ports: 
-      - "15672:15672"
-      - "5672:5672"
+      - "${RABBITMQ_FST_PORT}:15672"
+      - "${RABBITMQ_SND_PORT}:5672"
     networks:
       - notifier
+
+  couchdb:
+    image: couchdb
+    ports:
+      - "${COUCHDB_PORT}:5984"
+    environment:
+      - COUCHDB_USER=${COUCHDB_USER}
+      - COUCHDB_PASSWORD=${COUCHDB_PASSWORD}
+    networks:
+      - notifier
+
   app:
     image: app 
     build: 
       context: .
+    depends_on:
+      - couchdb
+      - rabbit-mq
     environment:
-      - COUCHDB_PORT=5984 
-      - COUCHDB_USER=admin
-      - COUCHDB_PASSWORD=password
-      - COUCHDB_HOST=172.17.0.4
-      - COUCHDB_NAME=notifications
+      - COUCHDB_PORT=${COUCHDB_PORT} 
+      - COUCHDB_USER=${COUCHDB_USER}
+      - COUCHDB_PASSWORD=${COUCHDB_PASSWORD}
+      - COUCHDB_HOST=couchdb
+      - COUCHDB_NAME=${COUCHDB_NAME}
       - RABBITMQ_HOST=rabbit-mq
-      - RABBITMQ_USER=guest
-      - RABBITMQ_PASSWORD=guest
-      - RABBITMQ_EXCHANGE=notifier
-      - RABBITMQ_QUEUE=notifications
-      - SECRET_KEY_BASE=h4njYkCmZgvQ0X9fcCtD2FmWIbRhVbErloGFJ0Wqdcqn4ZU2JjELo8CfGc5DoWKC
+      - RABBITMQ_USER=${RABBITMQ_USER}
+      - RABBITMQ_PASSWORD=${RABBITMQ_PASSWORD}
+      - RABBITMQ_EXCHANGE=${RABBITMQ_EXCHANGE}
+      - RABBITMQ_QUEUE=${RABBITMQ_QUEUE}
+      - SECRET_KEY_BASE=${SECRET_KEY_BASE}
     ports: 
-      - "4000:4000"
+      - "${PORT}:4000"
     networks:
       - notifier
 networks:
