@@ -14,6 +14,7 @@ defmodule Notifier.Application do
       {Phoenix.PubSub, name: Notifier.PubSub},
       # Start the Endpoint (http/https)
       NotifierWeb.Endpoint,
+      NotifierWeb.CouchDb.Operations,
       NotifierWeb.Room,
       {Agent.SocketState, {:error}},
       Consumer,
