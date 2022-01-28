@@ -1,7 +1,5 @@
 FROM elixir
 
-EXPOSE 8080
-
 COPY ./ .
 
 RUN mix local.hex --force
