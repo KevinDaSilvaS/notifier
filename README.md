@@ -8,4 +8,4 @@ Generally other apps(or services) push a message in the ```notifications``` queu
 Client app that connects to the topic ```room:user_id``` and monitors the ```shout``` channel waiting for broadcasted messages.
 
 ###Getting previous notifications
-The app also has a url to access the previous notifications stored in db in a GET method "localhost:4000/api/notifications" that accepts the "page=integer number" and/or "limit=integer number" to limit and filter notifications.
+The app also has a url to access the previous notifications stored in db in a GET method ```localhost:4000/api/notifications``` that accepts the ```page=integer number``` and/or ```limit=integer number``` to limit and filter notifications.
