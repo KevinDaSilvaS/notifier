@@ -11,7 +11,7 @@ defmodule NotifierWeb.RoomChannel do
   # by sending replies to requests from the client
   @impl true
   def handle_in("ping", payload, socket) do
-    {:reply, {:ok, payload}, socket}
+    {:reply, :ok, socket}
   end
 
   # It is also common to receive messages from the client and
