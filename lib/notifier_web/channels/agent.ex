@@ -16,7 +16,7 @@ defmodule Agent.SocketState do
   def get_socket_state do
     state = Agent.get :agent, fn socket_state -> socket_state end
     case state do
-      {:ok, socket} -> state
+      {:ok, _socket} -> state
       _ -> update_socket_state try_to_connect()
     end
   end
