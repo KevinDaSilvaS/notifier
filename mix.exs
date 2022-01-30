@@ -43,7 +43,8 @@ defmodule Notifier.MixProject do
       {:plug_cowboy, "~> 2.5"},
       {:httpoison, "~> 1.8"},
       {:amqp, "~> 3.0"},
-      {:slipstream, "~> 0.8.3"}
+      {:slipstream, "~> 0.8.3"},
+      {:stream_data, ">= 0.0.0", only: :test}
     ]
   end
 
