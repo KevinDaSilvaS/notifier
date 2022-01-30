@@ -13,7 +13,7 @@ defmodule NotifierWeb.RoomChannelTest do
   describe "#handle_in" do
     property "should call handle_in for ping succesfully" do
       socket = :socket
-      assert NotifierWeb.RoomChannel.handle_in("ping", %{}, socket) == {:reply, {:ok, %{}}, socket}
+      assert NotifierWeb.RoomChannel.handle_in("ping", %{}, socket) == {:reply, :ok, socket}
     end
   end
 end
